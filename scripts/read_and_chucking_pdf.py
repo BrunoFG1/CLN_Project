@@ -14,5 +14,4 @@ text_splitter = RecursiveCharacterTextSplitter(
 
 chunks = text_splitter.split_documents(content)
 
-print(chunks)
 
