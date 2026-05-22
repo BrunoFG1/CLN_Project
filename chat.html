@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RAG Architect | Developer Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#00344d",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-tertiary": "#571f00",
+                        "surface-container-lowest": "#060e20",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#c7c4d8",
+                        "primary-fixed": "#e2dfff",
+                        "surface-bright": "#31394d",
+                        "on-background": "#dae2fd",
+                        "secondary-container": "#00a2e6",
+                        "surface": "#0b1326",
+                        "on-primary-fixed": "#0f0069",
+                        "on-secondary-container": "#00344e",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed-dim": "#89ceff",
+                        "background": "#0b1326",
+                        "outline-variant": "#464555",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed": "#351000",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "error-container": "#93000a",
+                        "secondary": "#89ceff",
+                        "tertiary": "#ffb695",
+                        "primary-container": "#4f46e5",
+                        "surface-tint": "#c3c0ff",
+                        "surface-dim": "#0b1326",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary-fixed": "#001e2f",
+                        "outline": "#918fa1",
+                        "inverse-on-surface": "#283044",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary": "#1d00a5",
+                        "inverse-primary": "#4d44e3",
+                        "surface-variant": "#2d3449",
+                        "primary": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "secondary-fixed": "#c9e6ff",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container": "#171f33"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "code-block": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-block": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-full w-[280px] py-lg px-md bg-surface-container-low border-r border-outline-variant sticky left-0 top-0 z-50">
+<div class="mb-xl flex items-center gap-sm">
+<div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">RAG Architect</h1>
+<p class="font-label-caps text-label-caps opacity-60">v1.0.4</p>
+</div>
+</div>
+<button class="mb-lg w-full py-md px-lg bg-primary-container text-on-primary-container rounded-xl font-bold flex items-center justify-center gap-sm hover:opacity-90 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">add</span>
+                New Chat
+            </button>
+<nav class="flex-1 space-y-xs overflow-y-auto">
+<a class="flex items-center gap-md py-md px-md rounded-lg text-primary font-bold border-r-2 border-primary bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                    Explorer
+                </a>
+<a class="flex items-center gap-md py-md px-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">chat</span>
+                    Chat
+                </a>
+<a class="flex items-center gap-md py-md px-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+                    Documents
+                </a>
+<a class="flex items-center gap-md py-md px-md rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+<div class="pt-lg border-t border-outline-variant space-y-xs">
+<a class="flex items-center gap-md py-sm px-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Documentation</span>
+</a>
+<a class="flex items-center gap-md py-sm px-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-caps text-label-caps">API Status</span>
+</a>
+<div class="mt-md flex items-center gap-md p-sm">
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-primary/20" data-alt="A professional headshot of a software engineer in a modern, brightly lit office environment. The individual is wearing a smart-casual dark shirt, with a clean background of soft-focus developer tools and plants. The lighting is crisp and natural, emphasizing a high-tech corporate aesthetic with cool tones and subtle blue highlights to match the system palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDP5BCNHyvNxVx7IVjMj69xNziucavTTTt6-x_KAk_gbYNwJJsSyXuTN4lR2K_2LV3827VaE3yB55BNZW8Y9XwyM3oKYfIDfim4-VGIlPwS20k3j1jzT9ZxunwtuMXrb0cColtjjDBuSokL_eObfzq6_ZmQYS2wRR81PRsj2yxevHia-tcT2kkzaUqzY_J9vALPegf8a3EHM8dJ2B81QMjeBKiYUJLvT7p78S9Igq7N7CtE0V4Raqqhj-qRNUVM4Iu3-2VqwcqkMWrW"/>
+<div class="flex-1 overflow-hidden">
+<p class="font-bold truncate">Alex Chen</p>
+<p class="text-xs opacity-50 truncate">Pro Developer</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex flex-col flex-1 h-screen relative bg-surface overflow-hidden">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-16 w-full px-lg sticky top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-lg">
+<span class="font-headline-sm text-headline-sm font-black text-on-surface">Workspace</span>
+<div class="hidden md:flex gap-md">
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-on-surface transition-colors" href="#">History</a>
+<a class="text-primary border-b-2 border-primary pb-1 font-label-caps text-label-caps" href="#">Sources</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-on-surface transition-colors" href="#">Metadata</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs">
+<button class="p-sm text-on-surface-variant hover:text-on-surface transition-opacity opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-on-surface transition-opacity opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-bold text-sm transition-opacity hover:opacity-90">
+                        Deploy
+                    </button>
+</div>
+</header>
+<!-- Chat Canvas -->
+<div class="flex flex-1 overflow-hidden">
+<div class="flex-1 flex flex-col h-full bg-surface relative">
+<div class="flex-1 overflow-y-auto px-lg py-xl space-y-xl max-w-4xl mx-auto w-full">
+<!-- User Message -->
+<div class="flex flex-col items-end gap-sm">
+<div class="max-w-[80%] bg-surface-container-high border border-outline-variant p-md rounded-xl rounded-tr-none">
+<p class="text-on-surface">Can you show me how to implement a basic RAG retrieval function using Python and ChromaDB? I need to handle multi-document context.</p>
+</div>
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">User • 14:20</span>
+</div>
+<!-- AI Message -->
+<div class="flex flex-col items-start gap-sm">
+<div class="max-w-[90%] bg-surface-container-low border border-primary/10 p-lg rounded-xl rounded-tl-none relative group">
+<div class="absolute -left-12 top-0 w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="space-y-md">
+<p class="text-on-surface">To implement a multi-document retrieval system using ChromaDB, you'll need to initialize a persistent client, create a collection with your embedding function, and then query based on similarity. Here is a streamlined example using the latest ChromaDB SDK:</p>
+<!-- Code Block -->
+<div class="rounded-lg overflow-hidden bg-surface-container-lowest border border-outline-variant my-md">
+<div class="flex items-center justify-between px-md py-sm bg-surface-container-highest/50 border-b border-outline-variant">
+<span class="font-label-caps text-label-caps text-primary uppercase">Python</span>
+<button class="flex items-center gap-xs font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+                                                Copy
+                                            </button>
+</div>
+<pre class="p-md overflow-x-auto"><code class="font-code-block text-code-block text-on-surface-variant">import chromadb
+from chromadb.utils import embedding_functions
+
+# Initialize client
+client = chromadb.PersistentClient(path="./db")
+
+# Use OpenAI or SentenceTransformers for embeddings
+emb_fn = embedding_functions.SentenceTransformerEmbeddingFunction()
+
+collection = client.get_or_create_collection(
+    name="documentation_store", 
+    embedding_function=emb_fn
+)
+
+def query_rag(prompt, n_results=3):
+    results = collection.query(
+        query_texts=[prompt],
+        n_results=n_results
+    )
+    return results['documents'][0]</code></pre>
+</div>
+<div class="flex flex-wrap gap-xs mt-sm">
+<div class="px-sm py-xs bg-primary/10 border border-primary/20 rounded-full flex items-center gap-xs text-[11px] font-bold text-primary">
+<span class="material-symbols-outlined text-[14px]">description</span>
+                                            chromadb_api.pdf
+                                        </div>
+<div class="px-sm py-xs bg-primary/10 border border-primary/20 rounded-full flex items-center gap-xs text-[11px] font-bold text-primary">
+<span class="material-symbols-outlined text-[14px]">description</span>
+                                            embeddings_guide.md
+                                        </div>
+</div>
+</div>
+</div>
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">RAG Architect • 14:21</span>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-lg bg-gradient-to-t from-surface via-surface to-transparent">
+<div class="max-w-4xl mx-auto relative group">
+<div class="absolute -top-12 left-0 flex gap-sm items-center opacity-0 group-focus-within:opacity-100 transition-opacity">
+<span class="bg-surface-container-high px-sm py-xs rounded border border-outline-variant text-[10px] text-on-surface-variant font-bold uppercase">Prompt Engineering Active</span>
+</div>
+<div class="relative glass-effect rounded-2xl p-sm focus-within:ring-2 ring-primary/30 transition-all">
+<div class="flex items-end gap-sm px-sm">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder-on-surface-variant/50 py-md resize-none font-body-md" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" placeholder="Ask about your documentation..." rows="1"></textarea>
+<div class="flex items-center gap-sm pb-sm">
+<button class="w-10 h-10 bg-primary text-on-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar (Sources Panel) -->
+<aside class="w-80 h-full border-l border-outline-variant bg-surface-container-low flex flex-col hidden xl:flex">
+<div class="p-lg border-b border-outline-variant">
+<div class="flex items-center justify-between mb-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Sources</h2>
+<span class="bg-primary/20 text-primary px-sm py-xs rounded text-[10px] font-black uppercase">2 Matches</span>
+</div>
+<p class="text-xs text-on-surface-variant">Retrieved from the indexed document corpus.</p>
+</div>
+<div class="flex-1 overflow-y-auto p-md space-y-md">
+<!-- Source Card 1 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="p-md space-y-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-primary">chromadb_api.pdf</span>
+<span class="text-[10px] text-on-surface-variant bg-surface-container-highest px-xs py-base rounded">Page 42</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-4 italic border-l-2 border-primary/30 pl-md">
+                                    "...the <span class="text-primary bg-primary/10 px-xs">PersistentClient</span> ensures that all collection metadata and vector indices are stored on the local file system at the specified path. This is critical for RAG applications requiring cold-start persistence..."
+                                </p>
+</div>
+<div class="px-md py-sm bg-surface-container-highest/30 flex items-center justify-between opacity-60 group-hover:opacity-100">
+<span class="text-[10px] font-bold">Similarity: 0.942</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</div>
+</div>
+<!-- Source Card 2 -->
+<div class="bg-surface-container rounded-xl border border-outline-variant overflow-hidden hover:border-primary/50 transition-colors cursor-pointer group">
+<div class="p-md space-y-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-primary">embeddings_guide.md</span>
+<span class="text-[10px] text-on-surface-variant bg-surface-container-highest px-xs py-base rounded">Line 115</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-4 italic border-l-2 border-primary/30 pl-md">
+                                    "...SentenceTransformerEmbeddingFunction provides a lightweight local alternative to OpenAI. It is recommended to use <span class="text-primary bg-primary/10 px-xs">'all-MiniLM-L6-v2'</span> for general purpose semantic search..."
+                                </p>
+</div>
+<div class="px-md py-sm bg-surface-container-highest/30 flex items-center justify-between opacity-60 group-hover:opacity-100">
+<span class="text-[10px] font-bold">Similarity: 0.887</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</div>
+</div>
+<!-- Visual Flare - Asymmetric Decoration -->
+<div class="relative h-32 rounded-xl border border-dashed border-outline-variant flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 [mask-image:radial-gradient(ellipse_at_center,black,transparent)]"></div>
+<div class="text-center p-md z-10">
+<span class="material-symbols-outlined text-primary/40 text-4xl mb-sm">analytics</span>
+<p class="text-[10px] uppercase font-bold tracking-tighter opacity-40">Vector Latency: 12ms</p>
+</div>
+</div>
+</div>
+<div class="p-lg bg-surface-container-high/50">
+<button class="w-full py-sm rounded-lg border border-outline-variant text-xs font-bold hover:bg-surface-container-highest transition-colors">
+                            Manage Document Store
+                        </button>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple textarea auto-resize and basic state management
+        const textarea = document.querySelector('textarea');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Add a subtle atmospheric effect to the background on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const gradient = document.querySelector('main');
+            if (gradient) {
+                // Subtle reactive lighting could be added here if desired for advanced polish
+            }
+        });
+
+        // Interaction: Active navigation simulation
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('text-primary', 'font-bold', 'border-r-2', 'border-primary', 'bg-surface-container-high');
+                    l.classList.add('text-on-surface-variant');
+                });
+                link.classList.add('text-primary', 'font-bold', 'border-r-2', 'border-primary', 'bg-surface-container-high');
+                link.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

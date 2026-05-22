@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RAG Architect - Knowledge Bases</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#00344d",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-tertiary": "#571f00",
+                        "surface-container-lowest": "#060e20",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#c7c4d8",
+                        "primary-fixed": "#e2dfff",
+                        "surface-bright": "#31394d",
+                        "on-background": "#dae2fd",
+                        "secondary-container": "#00a2e6",
+                        "surface": "#0b1326",
+                        "on-primary-fixed": "#0f0069",
+                        "on-secondary-container": "#00344e",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed-dim": "#89ceff",
+                        "background": "#0b1326",
+                        "outline-variant": "#464555",
+                        "inverse-surface": "#dae2fd",
+                        "on-tertiary-fixed": "#351000",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed-variant": "#004c6e",
+                        "error-container": "#93000a",
+                        "secondary": "#89ceff",
+                        "tertiary": "#ffb695",
+                        "primary-container": "#4f46e5",
+                        "surface-tint": "#c3c0ff",
+                        "surface-dim": "#0b1326",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary-fixed": "#001e2f",
+                        "outline": "#918fa1",
+                        "inverse-on-surface": "#283044",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary": "#1d00a5",
+                        "inverse-primary": "#4d44e3",
+                        "surface-variant": "#2d3449",
+                        "primary": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "secondary-fixed": "#c9e6ff",
+                        "surface-container-low": "#131b2e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error": "#ffb4ab",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container": "#171f33"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "container-max": "1440px",
+                        "2xl": "48px",
+                        "lg": "24px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "code-block": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "code-block": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(30, 41, 59, 1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: #4f46e5;
+            background: rgba(15, 23, 42, 0.8);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1326;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2d3449;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Anchor Component -->
+<aside class="w-[280px] h-screen sticky left-0 top-0 bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant flex flex-col py-lg px-md z-50">
+<div class="mb-xl px-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-tight">RAG Architect</h1>
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">v1.0.4</p>
+</div>
+</div>
+</div>
+<button class="mb-xl w-full py-md px-lg bg-primary-container text-on-primary-container font-headline-sm rounded-xl flex items-center justify-center gap-sm hover:opacity-90 active:scale-[0.98] transition-all duration-150">
+<span class="material-symbols-outlined">add</span>
+<span>New Chat</span>
+</button>
+<nav class="flex-1 flex flex-col gap-xs overflow-y-auto">
+<!-- Active Tab: Explorer -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-primary dark:text-primary font-bold border-r-2 border-primary hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Explorer</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps">Documents</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg border-t border-outline-variant flex flex-col gap-xs">
+<div class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Documentation</span>
+</div>
+<div class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-caps text-label-caps">API Status</span>
+</div>
+<div class="mt-md flex items-center gap-sm px-md py-sm">
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbTHbFI-mZKPa_qrRVJR5K6E3QYUAHo4bjNZ6yRmjNTkH2rd_DBaEIdr5bYrLT6V-Zh-kcwrAFWd4l62bitV-n7jkSV-v9YeTGu0Iglf_KykSTJ2w6p1_WADgxygmwFmrYqcvdMDXroUlHXHyxHRmhDsUGgzDJvtGCV-MrUWtJWJ007_M2RlFk8yswn4aJSaPaiD1auGGUtJPAR7sshMc2XOTcpXjWWqO5Q4JJCtQFunYTdX8ot0uQo4A-pOKOylhWV3YveMMVJgjU"/>
+<div class="overflow-hidden">
+<p class="font-label-caps text-on-surface truncate">Admin User</p>
+<p class="text-[10px] text-on-surface-variant">Pro Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar Anchor Component -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-md sticky top-0 z-40 border-b border-outline-variant h-16 w-full px-lg flex justify-between items-center">
+<div class="flex items-center gap-xl flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="bg-surface-container-high border-none rounded-lg pl-10 pr-md py-sm w-full text-body-md focus:ring-1 focus:ring-primary text-on-surface transition-all" placeholder="Search Knowledge Bases..." type="text"/>
+</div>
+<nav class="hidden md:flex gap-lg">
+<a class="text-primary dark:text-primary border-b-2 border-primary pb-1 font-label-caps text-label-caps" href="#">History</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps transition-colors" href="#">Sources</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps transition-colors" href="#">Metadata</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-lg py-sm rounded-lg hover:opacity-80 transition-opacity">
+                    Deploy
+                </button>
+<div class="flex gap-sm">
+<button class="p-sm text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<section class="flex-1 p-lg max-w-container-max mx-auto w-full">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-xs">Explorer</h2>
+<p class="font-body-md text-on-surface-variant">Manage and query your indexed technical documentation.</p>
+</div>
+<button class="flex items-center gap-sm px-xl py-md bg-secondary text-on-secondary rounded-xl font-headline-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-secondary/10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_box</span>
+<span>New Knowledge Base</span>
+</button>
+</div>
+<!-- Bento-style Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-lg">
+<!-- Card 1 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[32px]">menu_book</span>
+</div>
+<span class="px-sm py-xs bg-secondary-container/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps">SYNCHRONIZED</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">React Documentation</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Latest React 18 &amp; 19 beta docs including server components and actions hooks.</p>
+</div>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between font-label-caps text-[12px] text-on-surface-variant">
+<span>Documents</span>
+<span class="text-on-surface">1,248 files</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-full"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] font-label-caps text-on-surface-variant pt-xs">
+<span class="material-symbols-outlined text-[14px]">history</span>
+<span>Last indexed: 2 hours ago</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[32px]">terminal</span>
+</div>
+<span class="px-sm py-xs bg-tertiary-container/20 text-tertiary border border-tertiary/30 rounded text-[10px] font-label-caps">OUTDATED</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Python API Reference</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Core library reference for Python 3.12, including type hinting and threading modules.</p>
+</div>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between font-label-caps text-[12px] text-on-surface-variant">
+<span>Documents</span>
+<span class="text-on-surface">842 files</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full w-3/4"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] font-label-caps text-on-surface-variant pt-xs">
+<span class="material-symbols-outlined text-[14px]">history</span>
+<span>Last indexed: 14 days ago</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg border-dashed border-2 border-outline-variant bg-transparent hover:border-primary">
+<div class="flex-1 flex flex-col items-center justify-center text-center gap-md py-xl">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[40px]">upload_file</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Connect New Source</h3>
+<p class="font-body-md text-on-surface-variant px-md">Import from GitHub, Notion, or local file system to expand your model's context.</p>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">storage</span>
+</div>
+<span class="px-sm py-xs bg-primary-container/20 text-primary border border-primary/30 rounded text-[10px] font-label-caps">INDEXING</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Internal Wiki (Engineering)</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Proprietary architecture diagrams and deployment SOPs for internal infrastructure.</p>
+</div>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between font-label-caps text-[12px] text-on-surface-variant">
+<span>Documents</span>
+<span class="text-on-surface">3,412 files</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden relative">
+<div class="bg-primary h-full w-[45%] transition-all duration-500 ease-out" id="indexing-progress"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] font-label-caps text-primary pt-xs animate-pulse">
+<span class="material-symbols-outlined text-[14px]">sync</span>
+<span>Currently vectorizing... 45%</span>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[32px]">integration_instructions</span>
+</div>
+<span class="px-sm py-xs bg-secondary-container/20 text-secondary border border-secondary/30 rounded text-[10px] font-label-caps">SYNCHRONIZED</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">Tailwind CSS v3.4</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Complete utility class reference and configuration guide for modern styling.</p>
+</div>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between font-label-caps text-[12px] text-on-surface-variant">
+<span>Documents</span>
+<span class="text-on-surface">156 files</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-full"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] font-label-caps text-on-surface-variant pt-xs">
+<span class="material-symbols-outlined text-[14px]">history</span>
+<span>Last indexed: 3 days ago</span>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="glass-card rounded-xl p-xl flex flex-col gap-lg relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[32px]">database</span>
+</div>
+<span class="px-sm py-xs bg-surface-variant text-on-surface-variant border border-outline-variant rounded text-[10px] font-label-caps">READ ONLY</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm mb-xs">PostgreSQL 16 Reference</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Comprehensive guide to SQL syntax, indexing strategies, and performance tuning.</p>
+</div>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between font-label-caps text-[12px] text-on-surface-variant">
+<span>Documents</span>
+<span class="text-on-surface">912 files</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-on-surface-variant h-full w-full"></div>
+</div>
+<div class="flex items-center gap-xs text-[11px] font-label-caps text-on-surface-variant pt-xs">
+<span class="material-symbols-outlined text-[14px]">history</span>
+<span>Last indexed: 1 month ago</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Stats / Activity Bar -->
+<div class="mt-2xl glass-card rounded-2xl p-lg flex flex-wrap items-center justify-between gap-xl">
+<div class="flex items-center gap-xl">
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant">TOTAL CHUNKS</span>
+<span class="font-headline-sm text-primary">2.4M</span>
+</div>
+<div class="h-8 w-px bg-outline-variant hidden sm:block"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant">TOKEN USAGE</span>
+<span class="font-headline-sm text-secondary">68%</span>
+</div>
+<div class="h-8 w-px bg-outline-variant hidden sm:block"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant">ACTIVE JOBS</span>
+<span class="font-headline-sm text-tertiary">3</span>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex -space-x-3">
+<img alt="Team Member" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnySxaSoCVg1GBo2O5baqf2R5dUdu_SuLuAQ_coeLfbTJh38fyf4kZ533C6bYQWm23waQAD9flNeq6EE79JUOEP8R-S04Zomw3x2p4RLAwP81ixjO9GaeWEwKm5qaJdEseoOncRxhyxKOIKZseU7m82V5lNmsyB_JJnYZLwKL37xhlt778NxElHq4Kquszm03M_qpg00ePSXz9IVVi1nDGvFMcBc5_2HD-keREv72ODf9o-6NHqlWjR0O_UFaQro8BcJqEPFT1v71J"/>
+<img alt="Team Member" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN0YRFww8Ye9XXHQXyzvec7flGLgpQT-vYDhvXSmNLfNLWSgMXZj4a3p_lu1ugm6lzck5fMlfEraPR1opk24RTB0NdiArG0fMJMvfTEvQ5ocrZB9IeLo_fKo273jqxZBnJw55_5Ls0qM8fu_YM-1SZBwivp6zX_D8SbyKaLqb4x2GsIRfhJDC-Bap1a6RfxTqZg6m8LnQDZQ4ynyy2VJ0XnECvbwrGlgeVY_JpM8HdjPruPfBfMjmhsqj6dYQYNJYrjay1e4PDlV9K"/>
+<img alt="Team Member" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlXJAUoNTigzr60FVpKpmjDtGibLUpVLlj-jD0bFtIqsyvE06aEIyffoTbOBbUAmmEBsdmacqV_mxfOFD8UE2paVkY-IxRCITksDJRroC9yXDQwCBdea74RbUwgdj6oVp068lNjd3wkEJbvuN7b90uaOEv13h-jmcdKvxR6ZYsmDsVNZ25BoyNn3HvCST3PIQTBpYCao3oe5D9fGa0B5ttkdU1-lri4hVBW4sQ2FjwzplihIoqbSsLvhQ4Ob96N8NGVJLn_pA04_CC"/>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border-2 border-surface flex items-center justify-center text-[10px] font-bold text-on-surface">+12</div>
+</div>
+<span class="font-body-md text-on-surface-variant">Collaborators online</span>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Simple micro-interaction for the indexing progress bar
+        const progressBar = document.getElementById('indexing-progress');
+        if (progressBar) {
+            setInterval(() => {
+                let currentWidth = parseFloat(progressBar.style.width) || 45;
+                if (currentWidth < 98) {
+                    currentWidth += Math.random() * 0.5;
+                    progressBar.style.width = currentWidth + '%';
+                }
+            }, 3000);
+        }
+
+        // Hover effect for the new knowledge base button
+        const fab = document.querySelector('button.bg-secondary');
+        if (fab) {
+            fab.addEventListener('mouseenter', () => {
+                fab.classList.add('shadow-secondary/25');
+            });
+            fab.addEventListener('mouseleave', () => {
+                fab.classList.remove('shadow-secondary/25');
+            });
+        }
+    </script>
+</body></html>
