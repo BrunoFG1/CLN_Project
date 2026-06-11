@@ -10,9 +10,12 @@ llm = OllamaLLM(model="mistral", temperature=0.0)
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 db = Chroma(persist_directory="../db/", embedding_function=embeddings)
-retriever = db.as_retriever(search_type="mmr", search_kwargs={"k": 3})
+retriever = db.as_retriever(search_type="mmr", search_kwargs={"k": 10})
 
-personality = """Tu és um robô rígido que APENAS responde com base no contexto fornecido.
+def format_docs(docs):
+    return "\n\n".join(doc.page_content for doc in docs)
+
+'''personality = """Tu és um robô rígido que APENAS responde com base no contexto fornecido.
 
 INSTRUÇÕES CRUCIAIS:
 1. Responde à pergunta usando ÚNICA e EXCLUSIVAMENTE os pedaços de contexto abaixo.
@@ -24,12 +27,30 @@ Contexto:
 
 Pergunta: {question}
 
-Resposta:"""
+Resposta:"""'''
+
+personality = """
+És um assistente técnico especializado em documentação.
+
+Responde de forma clara e objetiva.
+
+Usa apenas o contexto fornecido abaixo.
+
+Se não houver informação suficiente no contexto, diz que não encontraste essa informação.
+
+Contexto:
+{context}
+
+Pergunta:
+{question}
+
+Resposta:
+"""
 
 prompt = ChatPromptTemplate.from_template(personality)
 
 rag_chain = (
-    {"context": retriever, "question": RunnablePassthrough()}
+    {"context": retriever | format_docs, "question": RunnablePassthrough()}
     | prompt
     | llm
     | StrOutputParser()
@@ -38,7 +59,7 @@ while(True):
 
     a = input("What do you need my help for?\n")
 
-    if a == "sair":
+    if a == "sair" or "quit":
         break
 
     response = rag_chain.invoke(a)
